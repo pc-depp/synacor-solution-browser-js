@@ -1,6 +1,8 @@
+const STACK_SIZE = 8192
+
 class Stack {
     constructor() {
-        const buf = new ArrayBuffer(1_048_576)
+        const buf = new ArrayBuffer(STACK_SIZE)
         this.dv = new DataView(buf)
         this.byteSP = 0
     }
