@@ -1,6 +1,11 @@
 class Memory {
-    constructor(u8array) {
-        this.dv = new DataView(u8array.buffer)
+    constructor(u8arrayProgram) {
+        const buf = new ArrayBuffer(0x10000)
+        const view = new Uint8Array(buf)
+        for (let i=0; i<u8arrayProgram.byteLength; i++) {
+            view[i] = u8arrayProgram[i]
+        }        
+        this.dv = new DataView(buf)
     }
     read(addr) {
         return this.dv.getUint16(addr << 1, true)
