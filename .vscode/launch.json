@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "type": "chrome",
+            "name": "http://localhost:7000",
+            "request": "launch",
+            "url": "http://localhost:7000",
+            "webRoot": "${workspaceRoot}/build",
+            "sourceMaps": true,
+            "runtimeArgs": [
+                "--remote-debugging-port=9222"
+            ],
+        }
+    ]
+}
