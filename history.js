@@ -14,7 +14,7 @@ class History {
     attach() {
         this.nodes = document.querySelectorAll('.state-history')
         for (let i=0; i<this.nodes.length; i++) {
-            if (!localStorage.getItem(i)) {
+            if (!localStorage.getItem(`vmstate${i}`)) {
                 this.setState(i, {line: '', st: null})
             }
             this.nodes[i].addEventListener('click', this.handleClick.bind(this))
