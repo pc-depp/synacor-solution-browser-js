@@ -41,6 +41,7 @@ class VM {
         this.isExpectingInput = false
         this.inputBuf = null
         this.inputBufImmutable = null
+        this.prevLine = null
         this._disasmMode = false
         this.inputHandler = null
     }
@@ -198,6 +199,7 @@ class VM {
     _op_inp() {
         if (!this.inputBuf) {
             this.ip--
+            this.prevLine = this.inputBufImmutable
             if (this.inputHandler) {
                 this.inputHandler(this.inputBufImmutable)
             }
@@ -423,17 +425,19 @@ class VM {
             lines: this.io.getLines(),
             ip: this.ip,
             reg: this.reg,
+            prevLine: this.prevLine,
         }
     }
 
     restoreState(st) {
-        const { mem, stk, stkByteSP, lines, ip, reg, } = st
+        const { mem, stk, stkByteSP, lines, ip, reg, prevLine, } = st
         this.mem.setDataView(deserializeDataView(0x10000, mem))
         this.stk.setDataView(deserializeDataView(STACK_SIZE, stk))
         this.stk.setByteSP(stkByteSP)
         this.io.setLines(lines)
         this.ip = ip
         this.reg = reg
+        this.prevLine = prevLine
         this.isHalted = false
         this.inputBuf = null
         this.inputBufImmutable = null
