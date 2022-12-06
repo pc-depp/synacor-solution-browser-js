@@ -8,6 +8,13 @@ class History {
     getState(i) {
         return JSON.parse(localStorage.getItem(`vmstate${i}`))
     }
+    getAllStates() {
+        const states = []
+        for (let i=0; i<this.nodes.length; i++) {
+            states.push(this.getState(i))
+        }
+        return states
+    }
     setState(i, st) {
         localStorage.setItem(`vmstate${i}`, JSON.stringify(st))
     }
@@ -20,14 +27,19 @@ class History {
             this.nodes[i].addEventListener('click', this.handleClick.bind(this))
         }        
     }
-    hasInitialState() {
-        for (let i=0; i<this.nodes.length; i++) {
-            const rec = this.getState(i)
-            if (rec.line === 'INITIAL') {
-                return true
+    requiresInitialState() {
+        const states = this.getAllStates()
+
+        const hasEmpty = !!states.find((st) => st.line === '')
+        if (!hasEmpty)
+            return
+
+        for (let state of states) {
+            if (state.line === 'INITIAL') {
+                return false
             }
         }
-        return false
+        return true
     }
     handleClick(ev) {
         const idx = parseInt(ev.target.getAttribute('data-i'))
@@ -67,8 +79,8 @@ class History {
         }
         this.refreshCaptions()
     }
-    handleInput(inputBuf) {
-        if (!this.hasInitialState()) {
+    handleInput(inputBuf, suppressInitialState) {
+        if (!inputBuf && !suppressInitialState && this.requiresInitialState()) {
             inputBuf = 'INITIAL'
         }
         if (inputBuf) {

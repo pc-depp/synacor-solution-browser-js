@@ -44,6 +44,7 @@ class VM {
         this.prevLine = null
         this._disasmMode = false
         this.inputHandler = null
+        this.justRestored = false
     }
 
     registerInputHandler(handler) {
@@ -201,7 +202,8 @@ class VM {
             this.ip--
             this.prevLine = this.inputBufImmutable
             if (this.inputHandler) {
-                this.inputHandler(this.inputBufImmutable)
+                this.inputHandler(this.inputBufImmutable, this.justRestored)
+                this.justRestored = false
             }
             this.io.setExpectingInput(true)
             this.isExpectingInput = true
@@ -441,6 +443,7 @@ class VM {
         this.isHalted = false
         this.inputBuf = null
         this.inputBufImmutable = null
+        this.justRestored = true
     }
 }
 
