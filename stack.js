@@ -26,6 +26,12 @@ class Stack {
     setDataView(dv) {
         this.dv = dv
     }
+    getByteSP() {
+        return this.byteSP
+    }
+    setByteSP(v) {
+        this.byteSP = v
+    }
 }
 
 module.exports = { STACK_SIZE, Stack }

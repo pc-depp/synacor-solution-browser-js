@@ -198,21 +198,19 @@ class VM {
 
     _op_inp() {
         if (!this.inputBuf) {
+            this.ip--
+            this.prevLine = this.inputBufImmutable
+            if (this.inputHandler) {
+                this.inputHandler(this.inputBufImmutable)
+            }
             this.io.setExpectingInput(true)
             this.isExpectingInput = true
-            this.ip--
             return
         }
         const ch = this.inputBuf.charCodeAt(0)        
         this.io.putch(ch)
         this._unpackwrite(this._nextw(), ch)
         this.inputBuf = this.inputBuf.slice(1)
-        if (ch == 10) {
-            if (this.inputHandler) {
-                this.inputHandler(this.prevLine || 'INITIAL')
-            }
-            this.prevLine = this.inputBufImmutable
-        }
     }
 
     _exec(opc) {
@@ -423,25 +421,26 @@ class VM {
         return {
             mem: serializeDataView(this.mem.getDataView()),
             stk: serializeDataView(this.stk.getDataView()),
+            stkByteSP: this.stk.getByteSP(),
             lines: usePreviousLines ? this.io.getPreviousLines() : this.io.getLines(),
             ip: this.ip,
             reg: this.reg,
-            inputBuf: this.inputBuf,
-            inputBufImmutable: this.inputBufImmutable,
             prevLine: this.prevLine,
         }
     }
 
     restoreState(st) {
-        const { mem, stk, lines, ip, reg, inputBuf, inputBufImmutable, prevLine } = st
+        const { mem, stk, stkByteSP, lines, ip, reg, prevLine, } = st
         this.mem.setDataView(deserializeDataView(0x10000, mem))
         this.stk.setDataView(deserializeDataView(STACK_SIZE, stk))
+        this.stk.setByteSP(stkByteSP)
         this.io.setLines(lines)
         this.ip = ip
         this.reg = reg
-        this.inputBuf = inputBuf
-        this.inputBufImmutable = inputBufImmutable
         this.prevLine = prevLine
+        this.isHalted = false
+        this.inputBuf = null
+        this.inputBufImmutable = null
     }
 }
 

@@ -21,9 +21,7 @@
         for (let i=0; i<STEPS_PER_TIMESLICE; i++) {
             vm.step()
         }
-        if (!vm.isHalted) {
-            window.setTimeout(timeslice, TIMEOUT)
-        }
+        window.setTimeout(timeslice, TIMEOUT)
     }
     window.setTimeout(timeslice, TIMEOUT)
 
