@@ -1,5 +1,3 @@
-// const localStorage = require('localStorage')
-
 class History {
     constructor(vm) {
         this.vm = vm
@@ -12,7 +10,7 @@ class History {
         for (let i=0; i<this.nodes.length; i++) {
             const key = `vmstate${i}`
             if (!localStorage.getItem(key)) {
-                localStorage.setItem(key, JSON.stringify({line: '', st: null, prevLine: ''}))
+                localStorage.setItem(key, JSON.stringify({line: '', st: null}))
             }
             this.nodes[i].addEventListener('click', this.handleClick.bind(this))
         }        
