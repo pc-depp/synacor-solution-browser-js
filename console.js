@@ -1,6 +1,7 @@
 class Console {
     constructor(el) {
         this.lines = new Array(25)
+        this.previousLines = new Array(25)
         this.inputBuf = ''
         this.inputElem = null
         for (let y=0; y<25; y++) {
@@ -61,6 +62,19 @@ class Console {
         return this.inputBuf
     }
 
+    getLines() {
+        return this.lines
+    }
+
+    getPreviousLines() {
+        return this.previousLines
+    }
+
+    setLines(lines) {
+        this.lines = lines
+        this._rendertext()
+    }
+
     _linefeed() {
         for (let i=0; i<24; i++) {
             this.lines[i] = this.lines[i+1]
@@ -80,6 +94,10 @@ class Console {
     }
 
     print(s) {
+        for (let i=0; i<25; i++) {
+            this.previousLines[i] = this.lines[i]
+        }
+
         const numlines = Math.ceil(s.length / 80)
         for (let i=0, j=0; i<numlines; i++, j+=80) {
             this._linefeed()

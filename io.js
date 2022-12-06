@@ -20,6 +20,18 @@ class IO {
     getInputBuf() {
         return this.con.getInputBuf()
     }
+
+    getLines() {
+        return this.con.getLines()
+    }
+
+    getPreviousLines() {
+        return this.con.getPreviousLines()
+    }
+
+    setLines(lines) {
+        this.con.setLines(lines)
+    }
 }
 
 module.exports = IO

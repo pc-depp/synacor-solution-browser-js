@@ -20,6 +20,12 @@ class Stack {
         this.byteSP -= 2
         return this.dv.getUint16(this.byteSP, true)
     }
+    getDataView() {
+        return this.dv
+    }
+    setDataView(dv) {
+        this.dv = dv
+    }
 }
 
-module.exports = Stack
+module.exports = { STACK_SIZE, Stack }

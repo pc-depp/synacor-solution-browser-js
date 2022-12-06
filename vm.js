@@ -1,3 +1,7 @@
+const { serializeDataView, deserializeDataView } = require('./serializeDataView')
+
+const { STACK_SIZE } = require('./stack')
+
 const { OPCODES, ARGCOUNTS } = require('./opcodes')
 
 const {
@@ -36,7 +40,14 @@ class VM {
         this.isHalted = false
         this.isExpectingInput = false
         this.inputBuf = null
+        this.inputBufImmutable = null
+        this.prevLine = null
         this._disasmMode = false
+        this.inputHandler = null
+    }
+
+    registerInputHandler(handler) {
+        this.inputHandler = handler
     }
 
     _reg(v) {
@@ -192,9 +203,16 @@ class VM {
             this.ip--
             return
         }
-        this.io.putch(this.inputBuf.charCodeAt(0))
-        this._unpackwrite(this._nextw(), this.inputBuf.charCodeAt(0))
+        const ch = this.inputBuf.charCodeAt(0)        
+        this.io.putch(ch)
+        this._unpackwrite(this._nextw(), ch)
         this.inputBuf = this.inputBuf.slice(1)
+        if (ch == 10) {
+            if (this.inputHandler) {
+                this.inputHandler(this.prevLine || 'INITIAL')
+            }
+            this.prevLine = this.inputBufImmutable
+        }
     }
 
     _exec(opc) {
@@ -383,6 +401,7 @@ class VM {
             if (buf) {                
                 this.io.setExpectingInput(false)
                 this.inputBuf = buf
+                this.inputBufImmutable = buf.trimEnd()
                 this.isExpectingInput = false
                 this.io.putch('>'.charCodeAt(0))
                 this.io.putch(' '.charCodeAt(0))
@@ -400,10 +419,29 @@ class VM {
         }
     }
 
-    serializeState() {
+    serializeState(usePreviousLines) {
         return {
-            
+            mem: serializeDataView(this.mem.getDataView()),
+            stk: serializeDataView(this.stk.getDataView()),
+            lines: usePreviousLines ? this.io.getPreviousLines() : this.io.getLines(),
+            ip: this.ip,
+            reg: this.reg,
+            inputBuf: this.inputBuf,
+            inputBufImmutable: this.inputBufImmutable,
+            prevLine: this.prevLine,
         }
+    }
+
+    restoreState(st) {
+        const { mem, stk, lines, ip, reg, inputBuf, inputBufImmutable, prevLine } = st
+        this.mem.setDataView(deserializeDataView(0x10000, mem))
+        this.stk.setDataView(deserializeDataView(STACK_SIZE, stk))
+        this.io.setLines(lines)
+        this.ip = ip
+        this.reg = reg
+        this.inputBuf = inputBuf
+        this.inputBufImmutable = inputBufImmutable
+        this.prevLine = prevLine
     }
 }
 

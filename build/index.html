@@ -5,12 +5,52 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title></title>
+    <title>vm</title>
+
+    <style>
+      ul {
+        list-style: none;
+      }
+      li {
+        font-family: monospace;
+        font-size: 16px;
+        margin-top: 2px;
+        width: 500px;
+        min-width: 500px;
+        height: 21px;
+      }
+      li:nth-child(odd) {
+        background-color: #cfd;
+      }
+      li:nth-child(even) {
+        background-color: #dcf;
+      }
+      li:hover {
+        background-color: maroon;
+        color: antiquewhite;
+        cursor: pointer;
+      }
+    </style>
+
   </head>
 
   <body>
-    <div id="console">
-
+    <div style="display:flex;flex-direction:row">
+      <div id="console"></div>
+      <div>
+        <ul>
+          <li class="state-history" data-i="0"></li>
+          <li class="state-history" data-i="1"></li>
+          <li class="state-history" data-i="2"></li>
+          <li class="state-history" data-i="3"></li>
+          <li class="state-history" data-i="4"></li>
+          <li class="state-history" data-i="5"></li>
+          <li class="state-history" data-i="6"></li>
+          <li class="state-history" data-i="7"></li>
+          <li class="state-history" data-i="8"></li>
+          <li class="state-history" data-i="9"></li>
+        </ul>
+      </div>
     </div>
     <script src="app.js"></script>
   </body>

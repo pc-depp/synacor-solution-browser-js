@@ -13,6 +13,12 @@ class Memory {
     write(addr, v) {
         this.dv.setUint16(addr << 1, v, true)
     }
+    getDataView() {
+        return this.dv
+    }
+    setDataView(dv) {
+        this.dv = dv
+    }
 }
 
 
