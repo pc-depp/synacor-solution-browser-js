@@ -3,7 +3,6 @@ class History {
         this.vm = vm
         this.vm.registerInputHandler(this.handleInput.bind(this))
         this.attach()
-        this.provideInitialState()
         this.refreshCaptions()
     }
     getState(i) {
@@ -21,14 +20,14 @@ class History {
             this.nodes[i].addEventListener('click', this.handleClick.bind(this))
         }        
     }
-    provideInitialState() {
+    hasInitialState() {
         for (let i=0; i<this.nodes.length; i++) {
             const rec = this.getState(i)
             if (rec.line === 'INITIAL') {
-                return
+                return true
             }
         }
-        this.handleInput('INITIAL')
+        return false
     }
     handleClick(ev) {
         const idx = parseInt(ev.target.getAttribute('data-i'))
@@ -69,6 +68,9 @@ class History {
         this.refreshCaptions()
     }
     handleInput(inputBuf) {
+        if (!this.hasInitialState()) {
+            inputBuf = 'INITIAL'
+        }
         if (inputBuf) {
             this.shiftDown()
             this.setState(
