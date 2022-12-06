@@ -40,7 +40,7 @@ class Console {
     }
 
     _keyUpHandler(ev) {
-        if (ev.code === 'Enter') {
+        if (ev.code === 'Enter' && ev.target.value) {
             this.inputBuf = ev.target.value + String.fromCharCode(10)
         }
     }
