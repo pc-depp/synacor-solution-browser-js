@@ -25,10 +25,6 @@ class IO {
         return this.con.getLines()
     }
 
-    getPreviousLines() {
-        return this.con.getPreviousLines()
-    }
-
     setLines(lines) {
         this.con.setLines(lines)
     }

@@ -204,7 +204,6 @@ class VM {
             return
         }
         const ch = this.inputBuf.charCodeAt(0)        
-        this.io.putch(ch)
         this._unpackwrite(this._nextw(), ch)
         this.inputBuf = this.inputBuf.slice(1)
         if (ch == 10) {
@@ -213,6 +212,7 @@ class VM {
             }
             this.prevLine = this.inputBufImmutable
         }
+        this.io.putch(ch)
     }
 
     _exec(opc) {
@@ -419,11 +419,11 @@ class VM {
         }
     }
 
-    serializeState(usePreviousLines) {
+    serializeState() {
         return {
             mem: serializeDataView(this.mem.getDataView()),
             stk: serializeDataView(this.stk.getDataView()),
-            lines: usePreviousLines ? this.io.getPreviousLines() : this.io.getLines(),
+            lines: this.io.getLines(),
             ip: this.ip,
             reg: this.reg,
             inputBuf: this.inputBuf,
