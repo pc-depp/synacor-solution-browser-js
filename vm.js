@@ -292,7 +292,7 @@ class VM {
     _showdisasmarg(opc, addr) {
         const v = this.mem.read(addr)
 
-        if (opc == OP_OUT) {
+        if (opc == OP_OUT && !(v & 0x8000)) {
             return v == 10 ? 'newline' : `'${String.fromCharCode(v)}'`
         }
 
