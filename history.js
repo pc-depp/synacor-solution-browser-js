@@ -29,17 +29,7 @@ class History {
     }
     requiresInitialState() {
         const states = this.getAllStates()
-
-        const hasEmpty = !!states.find((st) => st.line === '')
-        if (!hasEmpty)
-            return
-
-        for (let state of states) {
-            if (state.line === 'INITIAL') {
-                return false
-            }
-        }
-        return true
+        return !states.find((st) => st.line !== '')
     }
     handleClick(ev) {
         const idx = parseInt(ev.target.getAttribute('data-i'))
